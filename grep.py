@@ -3,17 +3,7 @@ KeyWord = "TRUE"
 KeyWordx = "[1]"
 
 
-# WorkDir = os.getcwd()
-# WorkDirFiles = os.listdir(WorkDir)
-# for FileNames in WorkDirFiles:
-# 	if FileNames[6:10] == "Freq" or FileNames[7:11] == "Freq":
-# 		OutFileName = FileNames + "-out.txt"
-# 		PreFile = open(FileNames,"r").readlines()
-# 		for lines in PreFile:
-# 			if KeyWord in lines:
-# 				outlines = lines.replace("TRUE","")
-# 				outfile = open(OutFileName,"a")
-# 				outfile.write(outlines)
+
 
 def FileList():
 	WorkDirFiles = os.listdir(os.getcwd())

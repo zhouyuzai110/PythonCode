@@ -21,3 +21,67 @@ while order < 10002:
  		
 	print number,order	
 	
+
+
+# import time, math
+
+# #finding the 10001 th prime
+
+# strtTime = time.time()
+
+# #prime check
+# def ifPrime(chckNum,primeList):
+#     n = 0
+#     isPrime = False
+#     sqrtNum = math.sqrt(chckNum+1)
+#     #using seive of Erat
+#     while (primeList[n] < sqrtNum):
+#         if chckNum % primeList[n] == 0:
+#             return 
+#         else:
+#             isPrime = True
+#         n += 1
+#     if isPrime == True:
+#         primeList.append(chckNum)
+#     return
+
+# primeList = [2,3]
+# chckNum = 5
+# while (len(primeList)<3):
+#     ifPrime(chckNum,primeList)
+#     chckNum += 2
+
+
+# print time.time() -strtTime
+# print primeList[-1]
+
+
+
+
+
+
+
+
+
+# def nth_prime(n):
+# 	prime_count = 0
+# 	index = 2
+# 	current_array_size = 1000000
+# 	a = [0]*current_array_size
+
+# 	while (index < current_array_size):
+# 		if a[index] == 0:
+# 			prime_count += 1
+# 			a[index] = 1
+
+# 			for k in xrange(current_array_size/index):
+# 				a[k*index] = 1
+
+# 		if prime_count == n:
+# 			return index
+
+# 		index += 1
+
+# 	return "error: array not big enough"
+
+# print nth_prime(10001)

@@ -2,19 +2,22 @@
 # we can see that the 6th prime is 13.
 # What is the 10 001st prime number?
 
-order = 0
+order = 1
 number = 2
 while order < 10002:
-	for i in range(1,number+1):
-		list_prime = []
-	 	if number % i == 0:
-	 		list_prime.append(1)
-	 		if list_prime.count(1) > 3:
-	 			continue
-	 	else:
-	 		order += 1
-	number += 1	 		
+	list_prime = []
+	for i in range(1, (number + 1)/2+1):
+	 	if number % i == 0 :
+			list_prime.append(1)
+		else:
+			list_prime.append(2)
+		 		
+
+ 	if list_prime.count(1) == 1:
+
+ 		order += 1
+
+	number += 1
+ 		
 	print number,order	
 	
-
-

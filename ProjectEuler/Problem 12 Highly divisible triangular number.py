@@ -12,27 +12,33 @@
 # We can see that 28 is the first triangle number to have over five divisors.
 # What is the value of the first triangle number to have over five hundred divisors?
 
+import datetime
+start_time = datetime.datetime.now()
 
+def DivisorNumberDict(target_number_i):
+	if target_number_i not in divisor_number_dict:
+		divisor_number_dict[target_number_i] = 1
+	elif target_number_i in divisor_number_dict:
+		divisor_number_dict[target_number_i] += 1
 
 def DivisorNumber(target_number):
+	global divisor_number_dict  # def a global var so it"s can used in DivisorNumberDict
 	divisor_number_dict = {}
 	while target_number != 1:
-		for i in range(2,target_number+1):
+		# for i in range(2,target_number+1):  this is for loop style
+		i = 1
+		# this place i use while loop replace for loop. i see while loop is more power~!
+		while i <= target_number:  
+			i += 1
 			if target_number % i == 0:
-				# print target_number,i
-				if i not in divisor_number_dict:
-					divisor_number_dict[i] = 1
-				elif i in divisor_number_dict:
-					divisor_number_dict[i] += 1
+				print target_number,i
+				DivisorNumberDict(i)
 				target_number /= i
 				break
 			if target_number == i:
-				if i not in divisor_number_dict:
-					divisor_number_dict[i] = 1
-				elif i in divisor_number_dict:
-					divisor_number_dict[i] += 1
+				DivisorNumberDict(i)
 				break
-	# print divisor_number_dict		
+	print divisor_number_dict		
 	prodocut = 1		
 	for values in divisor_number_dict.values():
 		# print "values",values
@@ -50,10 +56,147 @@ triangle_number = 1
 while running:
 	dn = DivisorNumber(triangle_number)
 	print triangle_number,dn
-	# print "---------------------------------"
+	print "---------------------------------"
 	start_number += 1
 	triangle_number += start_number
 	
 	if dn > 500:
 		running = False
-	
+
+end_time = datetime.datetime.now()
+print end_time - start_time
+
+
+
+
+# trigNumber = 0
+# i     = 1
+# prime = [2,3,5,7,11,13,17]
+
+# def getFaktor(number):
+# 	faktor = [1 for a in prime]
+# 	for i in range(len(faktor)):
+# 		while True:
+# 			div = prime[i]
+# 			if (angka % div == 0):
+# 				number /= div
+# 				faktor[i] += 1
+# 			else:
+# 				break
+
+# 	result = 1
+# 	for i in faktor:
+# 		result *= i
+# 	return result
+
+# while True:
+# 	trigNumber += i
+# 	i          += 1
+
+# 	faktor = getFaktor(trigNumber)
+# 	if faktor > 500:
+# 		print (trigNumber, faktor)
+# 		break
+
+
+
+
+
+
+
+
+
+
+
+# def primeFactorise(n):
+# 	factors = []
+# 	d = 2
+# 	while n > 1:
+# 		while n % d == 0:
+# 			factors.append(d)
+# 			n /= d
+# 		d += 1
+# 		if d*d > n:
+# 			if n > 1: factors.append(n)
+# 			break
+
+# 	return factors
+
+# def main():
+# 	n = 1
+
+# 	divisors = 1
+# 	while divisors <= 500:
+# 		divisors = 1
+
+# 		# convert n to exponential prime form
+# 		nExponential = {}
+# 		primeFactors = primeFactorise(n)
+# 		for prime in primeFactors:
+# 			if prime not in nExponential:
+# 				nExponential[prime] = 1
+# 			else:
+# 				nExponential[prime] += 1
+
+# 		# convert n+1 to exponential prime form
+# 		primeFactors = primeFactorise(n+1)
+# 		for prime in primeFactors:
+# 			if prime not in nExponential:
+# 				nExponential[prime] = 1
+# 			else:
+# 				nExponential[prime] += 1
+
+# 		# divide n(n+1) by 2 (subtract 1 from the exponent of prime factor 2)
+# 		nExponential[2] -= 1
+
+# 		# apply the divisor function to the exponential prime form
+# 		for exponent in nExponential.values():
+# 			divisors *= exponent + 1
+
+# 		# increment n (next triangular number)
+# 		n += 1
+
+# 	print (n-1)*((n-1)+1)/2
+
+# if __name__ == '__main__':
+# 	main()
+
+
+
+
+
+
+
+# !/usr/bin/python
+
+# import math, time
+
+# def divisor_count(n):    # find the number of divisors for integer n. n>3
+#     q=int(math.sqrt(n))
+#     count=0
+#     for i in range(1,q):
+#         if n%i==0:
+#             count+=2
+#     if n==q*q:
+#         count=count-1
+#     return count
+
+# starttime=time.time()    
+# for i in range(4,1000000):
+#     a=divisor_count(i)
+#     b=divisor_count(i+1)
+#     if i%4==1 or i%4==2:
+#         if a*b>1000:
+#             c=i*(i+1)/2
+#             if divisor_count(c)>500:
+#                 print c
+#                 print i
+#                 break
+#     else:
+#         if a*b>500:
+#             c=i*(i+1)/2
+#             if divisor_count(c)>500:
+#                 print c
+#                 print i
+#                 break
+# print time.time() - starttime, 'seconds.'

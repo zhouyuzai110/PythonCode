@@ -19,25 +19,27 @@ def DivisorNumber(target_number):
 	while target_number != 1:
 		for i in range(2,target_number+1):
 			if target_number % i == 0:
+				print target_number,i
 				if i not in divisor_number_dict:
 					divisor_number_dict[i] = 1
 				elif i in divisor_number_dict:
 					divisor_number_dict[i] += 1
 				target_number /= i
-				continue
+				break
 			if target_number == i:
 				if i not in divisor_number_dict:
 					divisor_number_dict[i] = 1
 				elif i in divisor_number_dict:
 					divisor_number_dict[i] += 1
 				break
-	print divisor_number_dict		
+	# print divisor_number_dict		
 	prodocut = 1		
 	for values in divisor_number_dict.values():
+		# print "values",values
 		xx = values + 1
+		# print "xxvalues",xx
 		prodocut *= xx
-		print prodocut
-
+		# print "prodocut" ,prodocut
 	return prodocut	
 
 
@@ -46,13 +48,12 @@ running = True
 start_number = 1
 triangle_number = 1
 while running:
-
 	dn = DivisorNumber(triangle_number)
+	print triangle_number,dn
+	print "---------------------------------"
 	start_number += 1
 	triangle_number += start_number
-	print triangle_number,dn
 	
-
 	if dn > 500:
 		running = False
 	

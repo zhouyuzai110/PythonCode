@@ -16,34 +16,29 @@
 
 def DivisorNumber(target_number):
 	divisor_number_dict = {}
-	looping = True
-	# while looping:
-	while True:
-		i = 2
-		while target_number != 1:
-			# if target_number % i != 0:
+	while target_number != 1:
+		for i in range(2,target_number+1):
 			if target_number % i == 0:
 				if i not in divisor_number_dict:
-					print i
 					divisor_number_dict[i] = 1
 				elif i in divisor_number_dict:
-					print i
 					divisor_number_dict[i] += 1
 				target_number /= i
-			if 	target_number == 1:
-				looping = False
-
-		i += 1
-		
+				continue
+			if target_number == i:
+				if i not in divisor_number_dict:
+					divisor_number_dict[i] = 1
+				elif i in divisor_number_dict:
+					divisor_number_dict[i] += 1
+				break
 	print divisor_number_dict		
 	prodocut = 1		
 	for values in divisor_number_dict.values():
-		prodocut *= (values + 1)
+		xx = values + 1
+		prodocut *= xx
+		print prodocut
 
 	return prodocut	
-
-
-
 
 
 

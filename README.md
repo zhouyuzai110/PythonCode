@@ -23,6 +23,8 @@
 - **[GBK Encoding Support]()：**支持GBK编码。
 - **[Sublime CodeIntel](https://github.com/Kronuz/SublimeCodeIntel)：**代码自动提示,尚待考察
 
+- **[sublime-evernote](https://github.com/bordaigorl/sublime-evernote)：**印象笔记用户，请直接打开https://app.yinxiang.com/api/DeveloperToken.action，记下这里的Developer Token和NoteStore URL；打开Sublime，打开Preferences>Package Settings>Evernote>Settings User,把刚才两个值复制粘贴到这里的相应位置。打开Command Pallette选择Evernote: Open Evernote Note，随便打开一篇你的笔记来编辑把～编辑完成后Evernote: Update Evernote Note保存～然后进Evernote看看是不是更新了。
+
 ### MARKDOWN插件
 - **[Markdown Preview]()：**推荐，我最常用的Markdown插件，写完之后可以在浏览器中浏览。还可以导出成HTMl代码，直接发布到WordPress中。
 - **[Markdown Editing]()：**待选，如果在某个标题上按Tab键，它可以帮你折叠这个标题下的内容。而在文档的任何一个位置按下'Shift + Tab'，会折叠起来整个文档。这对分章节的长文档很有用。按下`Control+C`然后按`Control + N`能跳转到下一个标题，按下`Control + C`然后按`Control + P`能跳转到下一个标题。

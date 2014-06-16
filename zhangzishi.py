@@ -28,4 +28,5 @@ for l in set_order_file:
 
 out_order_file.close()
 
-
+# add Email address compile
+# mailre = re.compile(r"([0-9a-zA-Z_.]+@[0-9a-zA-Z.]+)")

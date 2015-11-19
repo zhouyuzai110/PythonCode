@@ -69,9 +69,6 @@ def main():
                 print str(e)
 
         
-
-
-
 if __name__ == "__main__":
 
     main()  

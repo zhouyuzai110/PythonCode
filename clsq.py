@@ -14,7 +14,7 @@ def get_hyper_links(url, key_words):
 
     try:
     	links = []
-        r = requests.post(url, timeout = 5, headers = headers)
+        r = requests.get(url, timeout = 1, headers = headers)
         time.sleep(1)
         soup = BeautifulSoup(r.content,"html.parser")
         p = soup.find_all('input')
@@ -31,19 +31,11 @@ def get_hyper_links(url, key_words):
         print str(e)
         return None          
 
-# def write_into_files(url):
 
-#     conn = urllib.urlopen(url) 
-
-#     jpgname = str(time.time()) + ".jpg"
-#     f = open(jpgname,'wb')  
-#     f.write(conn.read())  
-
-#     f.close()  
 
 def write_into_files(url):
 
-    conn = requests.post(url, stream = True, headers = headers, timeout = 5) 
+    conn = requests.get(url, stream = True, headers = headers, timeout = 1) 
     time.sleep(1)
     jpgname = str(time.time()) + ".jpg"
     f = open(jpgname,'wb')  

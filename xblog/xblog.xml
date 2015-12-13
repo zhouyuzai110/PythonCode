@@ -1,0 +1,18 @@
+<uwsgi>
+ 
+    <pythonpath>/home/evas/Desktop/xblog/</pythonpath>
+ 
+    <module>xblog</module>
+ 
+    <callable>app</callable>
+ 
+    <socket>127.0.0.1:8000</socket>     
+ 
+
+    <master/>
+ 
+    <processes>4</processes>               
+ 
+    <memory-report/>
+ 
+</uwsgi>

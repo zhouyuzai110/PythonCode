@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}<title>req</title> {% endblock %}
+
+
+{% block body %}
+
+{% for key in keys %}
+
+<p>{{key}}:---->>>>{{ request[key] }}</p>
+---------------------------------------------------------------------------------------------
+{% endfor %}
+
+
+
+{% endblock %}
+

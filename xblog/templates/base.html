@@ -1,0 +1,47 @@
+<!doctype html>
+<head>
+<meta charset="UTF-8">
+</head>
+ {% block title %}<title>Flaskr Blog X</title> {% endblock %}
+
+<ul>
+<li><a href="{{ url_for('index') }}">首页</a></li>
+{% if session['logined'] %}
+<li><a href="{{ url_for('logout') }}">退出</a></li>
+{% else %}
+<li><a href="{{ url_for('login') }}">登录</a></li>
+<li><a href="{{ url_for('register') }}">注册</a></li>
+{% endif %}
+
+{% if session['logined'] %}
+<li><a href="{{ url_for('post') }}">发表新文章</a></li>
+{% endif %}
+<li><a href="{{ url_for('req') }}">Request</a></li>
+</ul>  
+
+
+{% for message in get_flashed_messages() %}
+      {{ message }}
+{% endfor %}
+
+
+{% block body %}
+<h1>Flaskr Blog X</h1>
+{% for item in blogs %}
+<li><a href="{{ url_for('show_blog', title = item) }}">{{ item }}</a></li>
+{% endfor %}
+
+
+{% if session['logined'] %}
+<form action="{{ url_for('delitem') }}" method = "POST">
+    <dl>
+      <dt>文章标题:
+      <dd><input type = text name = "title">
+      
+      <dd><input type = submit value = 删除>
+    </dl>
+  </form>
+{% endif %}
+
+
+{% endblock %}

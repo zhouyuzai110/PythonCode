@@ -32,41 +32,40 @@ def get_hyper_links(url, key_word):
         print str(e)
         return None          
 
+def get_title(url):
+    r = requests.get(url)
+    soup = BeautifulSoup(r.content,"html.parser")
+    title = soup.find('h1', {'class':"article-title"}).get_text()
+    return title
+
+
 #u"将图片写入文件"
-def write_into_files(url):
+def write_into_files(jpgname,url):
 
     conn = requests.get(url, stream = True, timeout = 5)
-    jpgname = str(time.time()) + ".jpg"
     f = open(jpgname,'wb')  
     f.write(conn.raw.read())  
     f.close()  
 
-
-# def write_into_files(url):
-
-#     conn = urllib.urlopen(url) 
-#     jpgname = str(time.time()) + ".jpg"
-#     f = open(jpgname,'wb')  
-#     f.write(conn.read())  
-#     f.close()  
 
 
 def main():
 
     while True:
         os.chdir("/home/evas/Dropbox/Photo/")
-        url = raw_input("the url is :")
+        url = raw_input("the url is : ")
         links = get_hyper_links(url,"jpg")
+        title = get_title(url)
         for link in links:
             try:
-                write_into_files(link)
+                jpgname = title + str(time.time()) + ".jpg"
+                write_into_files(jpgname,link)
                 print('Pic Saved!') 
             except Exception, e:
                 print str(e)
 
         
 if __name__ == "__main__":
-
     main()  
     
     

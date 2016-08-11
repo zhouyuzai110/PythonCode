@@ -21,7 +21,7 @@ def get_content(url):
         qishu = soup.find('h1').get_text().replace(' ','').replace('\n','')
         date = soup.find('h2').find('a').get_text()
         p = soup.find_all('h2')[1:]
-        f = codecs.open('dcoker_weekly.txt', 'a', 'utf-8')
+        f = codecs.open('docker_weekly.txt', 'a', 'utf-8')
         f.write('-------------------' + date + '++++' + url + '-------------------' + '\n')
         for i in p:
             i_text = i.find('a').get_text().replace(' ','').replace('\n','')

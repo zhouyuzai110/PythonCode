@@ -45,7 +45,11 @@ def get_content(dongid, roomid):
         f = codecs.open('fdc.txt', 'a', 'utf-8')
         f.write(write_text)
         f.close()
-
+    except Exception,e:
+        print str(e)
+        return None     
+      
+      
 def get_content_header(dongid, roomid):
     try:
         url = 'http://zjjg.0557fdc.com:9555/xiaoqu/roominfo.aspx\?dongid=%s&roomid=%s' %(dongid, roomid)

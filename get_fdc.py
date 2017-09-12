@@ -71,18 +71,12 @@ def get_content_header(dongid, roomid):
         Labelckdj = soup.find(id = 'Labelckdj').get_text()
         Labelckzj = soup.find(id = 'Labelckzj').get_text()
         Labelbeiandate = soup.find(id = 'Labelbeiandate').get_text()
-        write_text_header = u'小区名称:' + '\t' + u'所属区域:' + '\t' + u'栋名称:' + '\t' + u'房号:' + '\t' + \
-        u'销售状态:' + '\t' + u'栋住宅均价（元）:' + '\t' + u'类型:' + '\t' + u'房屋用途:' + '\t' + \
-        u'换手次数:' + '\t' + u'建筑面积(平方米):' + '\t' + u'公摊面积(平方米):' + '\t' + u'套内面积(平方米):' + '\t' + \
-        u'参考单价(元/平方米):' + '\t' + u'参考总价(元):' + '\t' + u'备案时间:' + '\n'
         write_text = Labelxqmc + '\t' + Labelxzq + '\t' + Labeldongmc + '\t' + Labelroommc \
 + '\t' + Labelstatus + '\t' + Labeldong + '\t' + Labellx + '\t' + Labelyxyongtu \
 + '\t' + Labelhscs + '\t' + Labeljzmianji + '\t' + Labelgongtan + '\t' + Labeltaonei \
 + '\t' + Labelckdj + '\t' + Labelckzj + '\t' + Labelbeiandate + '\n'
         f = codecs.open('fdc.txt', 'a', 'utf-8')
-        f.write(write_text_header)
         f.write(write_text)
-
         f.close()
     except Exception,e:
         print str(e)
@@ -93,7 +87,15 @@ def get_content_header(dongid, roomid):
 
 
 def main():
+    write_text_header = u'小区名称:' + '\t' + u'所属区域:' + '\t' + u'栋名称:' + '\t' + u'房号:' + '\t' + \
+        u'销售状态:' + '\t' + u'栋住宅均价（元）:' + '\t' + u'类型:' + '\t' + u'房屋用途:' + '\t' + \
+        u'换手次数:' + '\t' + u'建筑面积(平方米):' + '\t' + u'公摊面积(平方米):' + '\t' + u'套内面积(平方米):' + '\t' + \
+        u'参考单价(元/平方米):' + '\t' + u'参考总价(元):' + '\t' + u'备案时间:' + '\n'
+    f = codecs.open('fdc.txt', 'a', 'utf-8')
+    f.write(write_text_header)
+    f.close()
     for i in range(1, int(roomid_max) + 1):
+        
         get_content_header(dongid, i)
         
         

@@ -25,7 +25,9 @@ def get_hyper_links(url, key_word):
                 if target_link.find(key_word) > 0:
                     if "imageView" not in target_link and "weixin" not in target_link\
                     and "330x200" not in target_link and "600x120" not in target_link\
-                    and "footer" not in target_link:
+                    and "footer" not in target_link and '&w=240&h=180' not in target_link\
+                    and '&w=120&h=120' not in target_link and '&w=100&h=75' not in target_link\
+                    and 'qrcode_for_gh' not in target_link:
                         links.append(target_link) 
         return links
     except Exception,e:

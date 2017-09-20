@@ -17,7 +17,7 @@ pattern = re.compile(r'http://.{2,3}.pstatp.com/large/.{20}')
    
 
 #u"获取源码中得超链接"
-def get_hyper_links(url):
+def get_hyper_links_toutiao(url):
 
     try:
         links = []
@@ -33,6 +33,24 @@ def get_hyper_links(url):
     except Exception,e:
         print str(e)
         return None          
+
+
+def get_hyper_links_snssdk(url):
+
+    try:
+        links = []
+        r = requests.get(url, headers = headers)
+        soup = BeautifulSoup(r.content,"html.parser")
+        p = soup.find_all('img')
+        for i in p:
+            target_link = i.get('alt-src')
+            if target_link is not None :
+                links.append(target_link) 
+
+        return links
+    except Exception,e:
+        print str(e)
+        return None 
 
 
 def get_title(url):
@@ -57,7 +75,10 @@ def main():
     while True:
         os.chdir("/home/evas/Dropbox/Photo/")
         url = raw_input("the url is : ")
-        links = get_hyper_links(url)
+        if 'toutiao' in url:
+            links = get_hyper_links_toutiao(url)
+        elif 'snssdk' in url:
+            links = get_hyper_links_snssdk(url)
         title = get_title(url)
         total_num = len(links)
         num = 1

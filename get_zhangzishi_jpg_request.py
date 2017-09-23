@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import requests
 import codecs
 
-import time, os
+import time, os, sys
 
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'}

@@ -52,13 +52,17 @@ def del_uniq_file(WORKDIR):
                 file_name_list.append(i)
         for j in file_name_list:
             print j
-        check_yes = raw_input("Do you want del this files [y/n] ? : ")
-        if check_yes == 'y':
-            for j in file_name_list[1:]:
-                file_path = os.path.join(WORKDIR, j)
-                os.remove(file_path)
-                print 'del %s complete' %file_path
+        # check_yes = raw_input("Do you want del this files [y/n] ? : ")
+        # if check_yes == 'y':
+        #     for j in file_name_list[1:]:
+        #         file_path = os.path.join(WORKDIR, j)
+        #         os.remove(file_path)
+        #         print 'del %s complete' %file_path
 
+        for j in file_name_list[1:]:
+            file_path = os.path.join(WORKDIR, j)
+            os.remove(file_path)
+            print 'del %s complete' %file_path
 
 
 def main():

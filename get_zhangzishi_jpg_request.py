@@ -29,8 +29,12 @@ def get_hyper_links(url, key_word):
                     and "footer" not in target_link and '&w=240&h=180' not in target_link\
                     and '&w=120&h=120' not in target_link and '&w=100&h=75' not in target_link\
                     and 'qrcode_for_gh' not in target_link and 'jjnoholiday' not in target_link:
-                        target_link = 'http:' + target_link
-                        links.append(target_link) 
+                        if 'https' in target_link:
+                            links.append(target_link)
+                        else:
+                            target_link = 'http:' + target_link
+                            links.append(target_link)
+                         
         return links
     except Exception,e:
         print str(e)

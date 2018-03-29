@@ -8,7 +8,7 @@ import time, os
 headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36'}
 proxies = {'http': 'socks5://127.0.0.1:1080'}
 
-origin_url = 'http://92.p9a.space/'        
+origin_url = 'http://92.t9p.today/'        
 
 #u"获取源码中得超链接"
 def get_hyper_links(url):
@@ -25,6 +25,7 @@ def get_hyper_links(url):
             if target_link is not None :
                 target_link = origin_url + target_link
                 links.append(target_link) 
+                print target_link
         return links
     except Exception,e:
         print str(e)

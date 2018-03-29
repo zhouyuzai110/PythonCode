@@ -12,7 +12,7 @@ import re
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'}
 
 pattern = re.compile(r'http://.{2,3}.pstatp.com/large/.{20}')
-pattern_tu = re.compile(r'http:\\/\\/.{2,3}.pstatp.com\\/origin\\/.{20}')
+pattern_tu = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/.{20}')
 
 #u"获取源码中得超链接"
 def get_hyper_links_toutiao(url):
@@ -31,7 +31,7 @@ def get_hyper_links_toutiao(url):
             elif "galleryInfo" in i.get_text():
                 target_links = re.findall(pattern_tu, i.get_text())
                 for j in target_links:
-                    target_link = j.replace('\/','/')
+                    target_link = j.replace('\\\\/','/')
                     links.append(target_link)
                 return links
     except Exception,e:

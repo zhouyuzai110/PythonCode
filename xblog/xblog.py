@@ -1,8 +1,11 @@
 #!/usr/bin/env python2
 # -*- coding: UTF-8 -*- 
 import os
-from flask import Flask, flash, redirect, url_for, render_template, session, request
-import redis
+from flask import Flask, flash, redirect, url_for, render_template, session, request, send_file
+import redis, qrcode, time
+from io import BytesIO
+from PIL import Image
+import base64
 
 import sys
 reload(sys)
@@ -88,6 +91,43 @@ def check_zhanghao():
 def redisconn():
     r = redis.Redis(host='localhost',port=6379,db=0)
     return r
+
+
+
+
+@app.route('/qrcode/<jiamizifu>', methods = ['GET', 'POST'])
+def create_qrcode(jiamizifu):
+    url = base64.b64decode(jiamizifu)
+    qr = qrcode.QRCode(
+    version = 1,
+    error_correction = qrcode.constants.ERROR_CORRECT_H,
+    box_size = 10,
+    border = 1
+    )
+    qr.add_data(url)
+    img = qr.make_image()
+
+    byte_io = BytesIO()
+    img.save(byte_io, 'PNG')
+    byte_io.seek(0)
+
+    return send_file(byte_io, mimetype = 'image/png', cache_timeout = 0)
+
+
+@app.route('/jiema/<jiamizifu>', methods = ['GET'])
+def jiema(jiamizifu):
+    jiemi_text = base64.b64decode(jiamizifu)
+    jiemi_text_list = jiemi_text.split('=')
+    if time.time() - int(jiemi_text_list[2]) > 60000:
+        return redirect(url_for('index')) 
+    else:
+        url = 'http://192.168.0.3:5000'+ '/' + jiemi_text_list[0] + '=' + jiemi_text_list[1]
+        return redirect(url)
+
+
+
+
+
 
 
 if __name__ == '__main__':

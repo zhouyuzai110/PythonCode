@@ -28,6 +28,8 @@ def get_hyper_links(url, key_word):
                     and "330x200" not in target_link and "600x120" not in target_link\
                     and "footer" not in target_link and '&w=240&h=180' not in target_link\
                     and '&w=120&h=120' not in target_link and '&w=100&h=75' not in target_link\
+                    and 'adbf0305ly1fpq91gjw70j20zk0zkgph' not in target_link \
+                    and 'cdn.zhangzishi.cc/wp-content/uploads/yt' not in target_link \
                     and 'qrcode_for_gh' not in target_link and 'jjnoholiday' not in target_link:
                         if 'https' in target_link:
                             links.append(target_link)

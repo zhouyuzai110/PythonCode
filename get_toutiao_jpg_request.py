@@ -11,8 +11,10 @@ import re
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'}
 
-pattern = re.compile(r'http://.{2,3}.pstatp.com/large/.{20}')
+pattern = re.compile(r'http://.{2,3}.pstatp.com/large/.{23}')
 pattern_tu = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/.{20}')
+pattern_tu1 = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/pgc-image\\\\/.{23}')
+pattern_tu2 = re.compile(r'http://.{2,3}.pstatp.com/large/pgc-image/.{23}')
 
 #u"获取源码中得超链接"
 def get_hyper_links_toutiao(url):
@@ -26,13 +28,23 @@ def get_hyper_links_toutiao(url):
         links = []
         for i in p:
             if "articleInfo:" in i.get_text():
-                links = re.findall(pattern, i.get_text())
+                links_articleInfo_1 = re.findall(pattern, i.get_text())
+                links.extend(links_articleInfo_1)
+
+                links_articleInfo_2 = re.findall(pattern_tu2, i.get_text())
+                links.extend(links_articleInfo_2)
                 return links
+
             elif "galleryInfo" in i.get_text():
-                target_links = re.findall(pattern_tu, i.get_text())
-                for j in target_links:
-                    target_link = j.replace('\\\\/','/')
-                    links.append(target_link)
+                target_links_tu1 = re.findall(pattern_tu1, i.get_text())
+                for j in target_links_tu1:
+                    target_link_tu1 = j.replace('\\\\/','/')
+                    links.append(target_link_tu1)
+
+                target_links_tu = re.findall(pattern_tu, i.get_text())
+                for jj in target_links_tu:
+                    target_link_tu = jj.replace('\\\\/','/')
+                    links.append(target_link_tu)
                 return links
     except Exception,e:
         print str(e)

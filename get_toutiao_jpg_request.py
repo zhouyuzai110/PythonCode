@@ -4,7 +4,7 @@
 from bs4 import BeautifulSoup
 import requests
 import codecs
-# from htmllib import HTMLParser 
+from htmllib import HTMLParser 
 import HTMLParser
 import time, os
 import re
@@ -23,7 +23,7 @@ def get_hyper_links_toutiao(url):
         r = requests.get(url, headers = headers)
         html_parser = HTMLParser.HTMLParser()
         txt = html_parser.unescape(r.content.decode('utf-8'))
-        soup = BeautifulSoup(txt, "html.parser")
+        soup = BeautifulSoup(r.content, "html.parser")
         p = soup.find_all('script')
         links = []
         for i in p:

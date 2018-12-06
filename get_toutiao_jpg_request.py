@@ -9,12 +9,13 @@ import HTMLParser
 import time, os
 import re
 
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'}
+headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'}
 
 pattern = re.compile(r'http://.{2,3}.pstatp.com/large/.{23}')
 pattern_tu = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/.{20}')
-pattern_tu1 = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/pgc-image\\\\/.{23}')
+pattern_tu1 = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/pgc-image\\\\/.{32}')
 pattern_tu2 = re.compile(r'http://.{2,3}.pstatp.com/large/pgc-image/.{23}')
+pattern_tu3 = re.compile(r'http://.{2,3}.pstatp.com/large/dfic-imagehandler/.{36}')
 
 #u"获取源码中得超链接"
 def get_hyper_links_toutiao(url):
@@ -33,7 +34,11 @@ def get_hyper_links_toutiao(url):
 
                 links_articleInfo_2 = re.findall(pattern_tu2, i.get_text())
                 links.extend(links_articleInfo_2)
-                return links
+
+                links_articleInfo_3 = re.findall(pattern_tu3, i.get_text())
+                links.extend(links_articleInfo_3)
+                print links
+                return list(set(links))
 
             elif "galleryInfo" in i.get_text():
                 target_links_tu1 = re.findall(pattern_tu1, i.get_text())
@@ -45,7 +50,8 @@ def get_hyper_links_toutiao(url):
                 for jj in target_links_tu:
                     target_link_tu = jj.replace('\\\\/','/')
                     links.append(target_link_tu)
-                return links
+                print links    
+                return list(set(links))
     except Exception,e:
         print str(e)
         return None          

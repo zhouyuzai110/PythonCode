@@ -16,6 +16,7 @@ pattern_tu = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/.{20}'
 pattern_tu1 = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/pgc-image\\\\/.{32}')
 pattern_tu2 = re.compile(r'http://.{2,3}.pstatp.com/large/pgc-image/.{23}')
 pattern_tu3 = re.compile(r'http://.{2,3}.pstatp.com/large/dfic-imagehandler/.{36}')
+link_long = 50
 
 #u"获取源码中得超链接"
 def get_hyper_links_toutiao(url):
@@ -29,15 +30,15 @@ def get_hyper_links_toutiao(url):
         links = []
         for i in p:
             if "articleInfo:" in i.get_text():
-                links_articleInfo_1 = re.findall(pattern, i.get_text())
-                links.extend(links_articleInfo_1)
+                # links_articleInfo_1 = re.findall(pattern, i.get_text())
+                # links.extend(links_articleInfo_1)
 
                 links_articleInfo_2 = re.findall(pattern_tu2, i.get_text())
                 links.extend(links_articleInfo_2)
 
                 links_articleInfo_3 = re.findall(pattern_tu3, i.get_text())
                 links.extend(links_articleInfo_3)
-                print links
+                links = [x for x in links if len(x) > link_long]
                 return list(set(links))
 
             elif "galleryInfo" in i.get_text():
@@ -50,7 +51,7 @@ def get_hyper_links_toutiao(url):
                 for jj in target_links_tu:
                     target_link_tu = jj.replace('\\\\/','/')
                     links.append(target_link_tu)
-                print links    
+                links = [x for x in links if len(x) > link_long]                   
                 return list(set(links))
     except Exception,e:
         print str(e)
@@ -107,7 +108,8 @@ def main():
         print title
         for link in links:
             try:
-                jpgname = title + str(time.time()) + ".jpg"
+                # jpgname = title + str(time.time()) + ".jpg"
+                jpgname = title + str(time.time())
                 write_into_files(jpgname,link)
                 print('%s of %s Pic Saved!') %(num, total_num)
                 num += 1

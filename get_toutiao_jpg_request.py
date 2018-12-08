@@ -16,6 +16,8 @@ pattern_tu = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/.{20}'
 pattern_tu1 = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/pgc-image\\\\/.{32}')
 pattern_tu2 = re.compile(r'http://.{2,3}.pstatp.com/large/pgc-image/.{23}')
 pattern_tu3 = re.compile(r'http://.{2,3}.pstatp.com/large/dfic-imagehandler/.{36}')
+pattern_tu4 = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/pgc-image\\\\/.{23}')
+pattern_tu5 = re.compile(r'http://.{2,3}.pstatp.com/large/pgc-image/.{32}')
 link_long = 50
 
 #u"获取源码中得超链接"
@@ -38,11 +40,15 @@ def get_hyper_links_toutiao(url):
 
                 links_articleInfo_3 = re.findall(pattern_tu3, i.get_text())
                 links.extend(links_articleInfo_3)
+
+                links_articleInfo_5 = re.findall(pattern_tu5, i.get_text())
+                links.extend(links_articleInfo_5)
+
                 links = [x for x in links if len(x) > link_long]
                 return list(set(links))
 
             elif "galleryInfo" in i.get_text():
-                target_links_tu1 = re.findall(pattern_tu1, i.get_text())
+                target_links_tu1 = re.findall(pattern_tu4, i.get_text())
                 for j in target_links_tu1:
                     target_link_tu1 = j.replace('\\\\/','/')
                     links.append(target_link_tu1)

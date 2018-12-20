@@ -48,15 +48,21 @@ def get_hyper_links_toutiao(url):
                 return list(set(links))
 
             elif "galleryInfo" in i.get_text():
-                target_links_tu1 = re.findall(pattern_tu4, i.get_text())
-                for j in target_links_tu1:
-                    target_link_tu1 = j.replace('\\\\/','/')
-                    links.append(target_link_tu1)
+                target_links_tu4 = re.findall(pattern_tu4, i.get_text())
+                for j in target_links_tu4:
+                    target_link_tu4 = j.replace('\\\\/','/')
+                    links.append(target_link_tu4)
 
                 target_links_tu = re.findall(pattern_tu, i.get_text())
                 for jj in target_links_tu:
                     target_link_tu = jj.replace('\\\\/','/')
                     links.append(target_link_tu)
+
+                target_links_tu1 = re.findall(pattern_tu1, i.get_text())
+                for jjj in target_links_tu1:
+                    target_link_tu1 = jjj.replace('\\\\/','/')
+                    links.append(target_link_tu1)
+                       
                 links = [x for x in links if len(x) > link_long]                   
                 return list(set(links))
     except Exception,e:

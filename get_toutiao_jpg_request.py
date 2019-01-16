@@ -11,14 +11,14 @@ import re
 
 headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'}
 
-pattern = re.compile(r'http://.{2,3}.pstatp.com/large/.{23}')
+pattern = re.compile(r'http://.{2,3}.pstatp.com/large/.{20}')
 pattern_tu = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/.{20}')
 pattern_tu1 = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/pgc-image\\\\/.{32}')
 pattern_tu2 = re.compile(r'http://.{2,3}.pstatp.com/large/pgc-image/.{23}')
 pattern_tu3 = re.compile(r'http://.{2,3}.pstatp.com/large/dfic-imagehandler/.{36}')
 pattern_tu4 = re.compile(r'http:\\\\/\\\\/.{2,3}.pstatp.com\\\\/origin\\\\/pgc-image\\\\/.{23}')
 pattern_tu5 = re.compile(r'http://.{2,3}.pstatp.com/large/pgc-image/.{32}')
-link_long = 50
+link_long = 45
 
 #u"获取源码中得超链接"
 def get_hyper_links_toutiao(url):
@@ -32,8 +32,8 @@ def get_hyper_links_toutiao(url):
         links = []
         for i in p:
             if "articleInfo:" in i.get_text():
-                # links_articleInfo_1 = re.findall(pattern, i.get_text())
-                # links.extend(links_articleInfo_1)
+                links_articleInfo_1 = re.findall(pattern, i.get_text())
+                links.extend(links_articleInfo_1)
 
                 links_articleInfo_2 = re.findall(pattern_tu2, i.get_text())
                 links.extend(links_articleInfo_2)

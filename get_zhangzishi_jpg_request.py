@@ -32,7 +32,7 @@ def get_hyper_links(url, key_word):
                     and 'cdn.zhangzishi.cc/wp-content/uploads/yt' not in target_link \
                     and 'adbf0305ly1fnrpfz75e1j20zk0zkn10' not in target_link \
                     and 'qrcode_for_gh' not in target_link and 'jjnoholiday' not in target_link:
-                        if 'https' in target_link:
+                        if 'https' in target_link or 'http' in target_link:
                             links.append(target_link)
                         else:
                             target_link = 'http:' + target_link

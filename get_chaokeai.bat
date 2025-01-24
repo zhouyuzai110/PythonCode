@@ -1,0 +1,1 @@
+python get_douyin_video.py https://www.douyin.com/user/MS4wLjABAAAABAqWIVCSL2xpC1ruQ8YsTsyF_hjsA-8_68sXwyXvmZ_YorOlGiVj9_MSRlve9Vf5

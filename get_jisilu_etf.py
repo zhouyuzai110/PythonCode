@@ -57,6 +57,22 @@ def get_origin():
     # 将指数代码和指数代码缩写列转换为字符串类型
     df_result_china_index_list[['指数代码', '指数代码缩写']] = df_result_china_index_list[['指数代码', '指数代码缩写']].astype(str)
 
+    # 对结果数据框按跟踪指数分组，并进行聚合操作
+    df_result_china_index_list = df_result_china_index_list.groupby(
+        '跟踪指数', as_index=False).agg({
+            '基金个数': 'first',  # 取第一个非空值（因相同跟踪指数的数值一致）
+            '基金规模': 'first',  # 同上
+            '指数代码': lambda x: '、'.join(x),  # 合并为顿号分隔的字符串
+            '指数代码缩写': lambda x: '、'.join(x)  # 同上
+        }).sort_values(
+            by='基金规模', ascending=False).reset_index(drop=True)
+
+    # 计算所有基金的总规模
+    total = df_result_china_index_list['基金规模'].sum()  # 计算总规模
+
+    # 计算并添加每个基金规模占总规模的百分比到数据框
+    df_result_china_index_list['规模占比'] = (df_result_china_index_list['基金规模'] / total * 100).round(2).astype(str) + '%'
+
     # 创建Excel写入器
     with pd.ExcelWriter(excel_file) as result_excel:
         # 将原始基金列表按照基金规模降序排列并写入Excel

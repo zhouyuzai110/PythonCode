@@ -17,7 +17,7 @@ headers = {
 }
 # down_load_path = "C:/Users/saber/Desktop/pythonscript/douyidown/"
 
-down_load_path = "F:/新建文件夹/pythonscript/douyidown/"
+down_load_path = "E:/PythonCode/douyidown/"
 
 
 def write_into_file(path, target_content):

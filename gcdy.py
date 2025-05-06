@@ -185,6 +185,16 @@ def get_qiushi_title(url, soup):
         target_author = div_author.replace('来源： ', '').replace('　作者', '').replace('： ', '')
         title = 'aaa' + target_author + '：' + title
 
+    if 'qstheory' in url:
+        title = soup.find('title').get_text().replace(' - 求是网', '').replace(' ', '').replace('\r\n', '')
+        h2 = soup.find('h2').get_text().replace('\r\n', '').replace(' ', '')
+        author = soup.find_all('span', {'class': "appellation"})
+        target_author = ''
+        for item in author:
+            if '作者：' in item.get_text():
+                target_author = item.get_text().replace(' ', '').replace('作者：', '').replace('\r\n', '')
+        title = 'aaa' + target_author + '：' + title + h2
+
     return title
 
 

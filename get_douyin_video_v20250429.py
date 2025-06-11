@@ -3,7 +3,8 @@ import os
 import sys
 import time
 import re
-
+from collections import defaultdict
+from datetime import datetime, timezone, timedelta
 import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
@@ -20,41 +21,41 @@ BASE_URL = "https://www.douyin.com/aweme/v1/web/aweme/post/?aid=6383&sec_user_id
 # DOWN_LOAD_PATH = "E:/PythonCode/douyidown/"
 DOWN_LOAD_PATH = "//ttnas/homes/zy0612/douyin_download/"
 USER_ID_DICT = {
-    #20250506
+    #20250509
     # 'chaokeaidelani': 'MS4wLjABAAAABAqWIVCSL2xpC1ruQ8YsTsyF_hjsA-8_68sXwyXvmZ_YorOlGiVj9_MSRlve9Vf5',
-    #20250506
+    #20250509
     # '小妖精🧚‍♀️': 'MS4wLjABAAAAMn0vkvdlaN0vkG60lMUfP0DtiNdsRZNl1KsRAFI0V-o8ee4FUSVyK_Miq-YCIeML',
-    #20250506
+    #20250509
     # '皖皖': 'MS4wLjABAAAAuSiwb7k3ZqFCGYankf7OsZ4I0KYSZugAvf_A9zBrzUU',
-    #20250506
+    #20250509
     # '黄小依依': 'MS4wLjABAAAAly2paCVGTLFbzNAl6-VU1UMN0EXUJSNhkAVut3fiFpMLkUFN2sdCJpeIGA-eg3nl',
-    #20250506
+    #20250509
     # '小泽选手': 'MS4wLjABAAAAm7z6GGMLkqZUK6P8J9o5zroInK1aS_MeCbPK7ed-On5fn8Dp-DB3rfpevAh7bNxP',
-    #20250506
+    #20250509
     # '赤心达琳': 'MS4wLjABAAAAeuiQQCvzqfQ_3iorNsRI7B5KIHnhKDHg3zxmgPLO44hGm7uGinQ7vZTCxCUxwa-w',
-    #20250506
+    #20250509
     # '菀菀': 'MS4wLjABAAAAu_HEA2FUfSRdjxFkhXxI7q1SndfEJRKTXeTQWp1itSk',
-    #20250506
+    #20250509
     # '莉莉娅✨': 'MS4wLjABAAAAMQCwSo2gXbA4z29H30tIhwevWn0hS5Ep9LW8gvY3Wkw',
-    #20250506
+    #20250509
     # '小师妹': 'MS4wLjABAAAAdZ8Sm6D3GGNI95_FQbgrU4wM8uftEf-oQZ0SGBxErmM',
-    #20250506 127/604
+    #20250509
     # 'F FF': 'MS4wLjABAAAAycZ09Nn8WSmcoMiSC71A0ZrIIYdMdfYgD7NoAavL4CM_VIcC84q612nJgU-Leg5U',
-    #20250506 313/399
+    #20250508
     # '瑶瑶。': 'MS4wLjABAAAA4LaXHazkVOC88zda95RE330H3TyfCtaCQ0RhWttX4Lw',
-    #20250506 none
+    #20250509 none
     # '桃了桃了': 'MS4wLjABAAAAvGmnkhg4L-GwariULtMQr3bt9GjeG21zCnBunFRB0p_e6N3vPUg81F1T8hLMOAHQ',
-    #20250506
+    #20250509
     # '初7阿': 'MS4wLjABAAAAxvFDE6PnnvMpXTrUbXn-rJKrH4bLv4Aewfy0xGelaqdFzwad2SW0sukiYj8g5W13',
-    #20250506
+    #20250509
     # '月初7': 'MS4wLjABAAAA5adp44GHz_JyY3vIMFdJqKnBonUKDl_B3LSPs7Kb9dsEfWJX-c_7FZnRpc0x8V07',
-    #20250506  ????
+    #20250509  ????
     # '7iout': 'MS4wLjABAAAAvR8jJKSFXYxFzp702Jv4n-UYTlqk1q7NAer1R4W4SSTc5JBQCMMhBaZ2KtQBiMsS',
-    #20250506 144/345
+    #20250509
     # '丑丑刘': 'MS4wLjABAAAA68OGeReuRJQeeoqJhdVISvZoVsAozJCjulb2cEjTT_Tukimnp7c1rG8IhJHjfy-U',
-    #20250506
+    #20250509
     # '荔枝冰': 'MS4wLjABAAAARAnCeRCBd8WMVRYzE-peF2iHdR9EqJa7TpLo_dYQS9aQiAt2qLpbtikGii9Mh3wY',
-    #20250506 93/277
+    #20250509
     # '蜜桃不够甜': 'MS4wLjABAAAAbu9ErYjEWF4Co_m72_JOpXF8EaL68kOY6FqnAtTxVtK13osp0dduhBHdK7pGIXx5',
     #20250506
     # '蔡咩咩🐑': 'MS4wLjABAAAAE15Bwh8A9HzfvSH2eyzETkSAtu901dEyCGL_3AhbIqCpZWv1LZN_TWXMIihzkn15',
@@ -70,7 +71,9 @@ USER_ID_DICT = {
     # '花间集': 'MS4wLjABAAAAa318vr5_JpDlV7bXxz3A3R9dbNfCDvRW75ik1XYasSA',
     #20250506
     # '陈梦婷': 'MS4wLjABAAAAe-mrBcvNgSlggvZzrK-5Q_BVQYy7dwqoRm9oabKNVIA',
+    #20250507
     # 'kttin': 'MS4wLjABAAAAwAwjuhpTHykvlyELpckEuhq6XfgATZHkud2gNrMkdZx0lz75p8P9cyWfBHaUMUPT',
+    #20250507
     # 'YeonHwa': 'MS4wLjABAAAANL7JScWfjttBWCG6-HCfXi_bc3n3J4MQgOPbbGtVS6yRvamDeB-MZNTr_upFAo5y',
     #20250506
     # '姜念安✨': 'MS4wLjABAAAArkozwIaK0C-6SQZD4PpFztX1-jP01JFhtzL2rFARKy0',
@@ -80,17 +83,23 @@ USER_ID_DICT = {
     # '财神爷的心尖尖': 'MS4wLjABAAAAJfKP7w4oR2CktbHsUE26ioULlbiLH6NQoLWierkr-J4',
     #20250506
     # '天香谷✨✨': 'MS4wLjABAAAA6haPHE4o8uemgKFLdGbQxs1HzSawO4An1Snpaz00aEajzJH56NoAe7YoVBf3uDMm',
+    #20250507
     # '原来是一梨呀': 'MS4wLjABAAAACXlyu7s6AC9fM50Sw38iKF1gLzSk3PGBCiYjIEVVmsPdwHdQiDlLR0q6ZfdA_AM6',
+    #20250507
     # '小🐍的电车车': 'MS4wLjABAAAAiBhrRobDriPb3gbAdIEF1jQb3rtvMMaUduxOzqIdkOk',
     #20250506
     # 'CameraMan': 'MS4wLjABAAAAbBVrwZgLgdl5_9DjFt89q-scjxODnB66JUMTF_iFDRs',
-    #20250506  250/288
+    #20250508
     # '静静学姐': 'MS4wLjABAAAAP7Z5kBdUE464Tq8LwnoZKmK4FyLu3fgBwteBXkf_n2k4F4HZ2Dy0WssiGPxOK49W',
+    #20250508
     # '背影女神（橱窗营业中）': 'MS4wLjABAAAAQArKjAatCD-025hnBNFTJBFLGiB6e5LUGnWnqZ4bHYY',
+    #20250508
     # '奔跑的小西': 'MS4wLjABAAAAVsHnPaYO0nwder9Dqji7GbVDnip-yJQOOGoyNeWN2Hs',
     #20250506
     # '吃不饱': 'MS4wLjABAAAAbqJK49kFC7__gIKK6RJkpS1g4-AGjiVTHyWFgiCKiDlORMj36_WgqTjXMCh_dLps',
+    #20250507
     # '@清清子': 'MS4wLjABAAAAmxvlBteS3TleGeuvSdkb8o9GnfAXlx3zs75RI9KU7nxB315Czrf-WvdkEHcbkV3Z',
+    #20250508
     # '乱取一个名': 'MS4wLjABAAAAaUvbvk4TLDDEPlNQ9wI_DzzMhEmhEgjzl-3RPcy8g5M',
     #20250506
     # '- 楊穎 -': 'MS4wLjABAAAA8bXrjog2b79SuRT0iBW5DcTAFUe2qbvpoA1DIPhKQUo',
@@ -100,13 +109,21 @@ USER_ID_DICT = {
     # 'Stan': 'MS4wLjABAAAAdKL86CXlh_ir5aW2NXVWreNClZWc9jS_eVfeKuFqHsCP1fDI2j86WgGOLGXygRPR',
     #20250506
     # '大C☀️': 'MS4wLjABAAAA_cfLBPtF4ZB0cBPX2JjgNxt6HQEk61xQA5s5O0eWM-KZM5NvoT534FTkXxmAJzPU',
+    #20250507
     # 'kk的野蛮': 'MS4wLjABAAAACvsBvdLd3HFKfIwCO_dwphqujnCHQz-OQ68JhQ9FqNdlx5GbLk801SzHslaasv94',
     # 20250506
     # '-l': 'MS4wLjABAAAA8iLRX6DxldQCcbIZCJ17tOFqwo7haFJMOFPdqcBpY2c',
     # 20250506
     # '大慧儿💙¹⁶⁸': 'MS4wLjABAAAA5vdGeE-2gOLx2ml8lV3y1RHGngO4lwNfGZZV6fM7AcC_OU4J6j6dX-pX022Lbvnv',
-    # '菀菀': '',
-    # '菀菀': '',
+    # 20250509
+    # '春春~': 'MS4wLjABAAAAeVtyha4Cyew9e6Vr5Q16BEmXSJ2DIuE1ZK9kY58F27U',
+    # 20250509
+    # '冉冉冉': 'MS4wLjABAAAAnI5oDuIDQnYC7a0P4W6ctGn_Toci3YzSZknGs3SmESE',
+    # 20250509
+    # '小涂日记': 'MS4wLjABAAAA_Na8v3uU8Jc7wM_UJM79uv2WdShaHMAZdRjzUFNCPe0',
+    # 20250509
+    # '温如玉': 'MS4wLjABAAAA-s5VN16OoM33oz1_LQm4Jj4E26v5uzNMsGma4jACi_swObKyQjblzeURBRcGFAx1',
+    # '哇喔哈': 'MS4wLjABAAAA3t9y36fTVJq5MQtJ00PKKzYxg01HHLIBzerRyDqvccU',
     # '菀菀': '',
     # '菀菀': '',
 }
@@ -166,6 +183,29 @@ def check_video_uniq(video_name, video_name_list):
     if video_name not in video_name_list:
         # 如果不在列表中，返回True
         return True
+
+
+def group_and_print_update_stats(gengxin_list):
+    """
+    按视频文件名中的用户ID分组，统计并打印每个用户的更新数量及文件名。
+    
+    参数:
+        gengxin_list (List[str]): 更新的视频文件名列表。
+    """
+    id_grouped = defaultdict(list)
+
+    for filename in gengxin_list:
+        parts = filename.split('_')
+        if len(parts) > 1:
+            video_id = parts[1]
+            id_grouped[video_id].append(filename)
+
+    print(f'共更新{len(gengxin_list)}个视频')
+
+    for video_id, files in id_grouped.items():
+        print(f"\n[用户ID: {video_id}] 更新了 {len(files)} 个视频:")
+        for f in files:
+            print(f"  └─ {f}")
 
 
 def get_video_list_merged(USER_ID_DICT):
@@ -229,17 +269,26 @@ def get_video_list_user(user_id, merged_list, has_more=1, max_cursor=0):
         if len(video_name) == 0:
             video_name = '无名称'
         # 获取视频创建时间，并格式化为字符串，类型为str
-        video_create_time: str = time.strftime("%Y-%m-%d_%H_%M_%S", time.localtime(item['create_time']))
+        utc_time = datetime.fromtimestamp(item['create_time'], tz=timezone.utc)
+        # 转换为东八区时间
+        beijing_time = utc_time.astimezone(timezone(timedelta(hours=8)))
+        video_create_time: str = beijing_time.strftime("%Y-%m-%d_%H_%M_%S")
+        # video_create_time: str = time.strftime("%Y-%m-%d_%H_%M_%S", time.localtime(item['create_time']))
+        create_time = item['create_time']
         if item['images']:
             for image in item['images']:
                 image_url: str = image['url_list'][0]
                 image_name: str = video_name + '_' + str(item['images'].index(image))
-                one_image_info_list = ['image', video_author_id, video_author_name, video_create_time, image_name, image_url]
+                one_image_info_list = [
+                    'image', video_author_id, video_author_name, video_create_time, image_name, image_url, create_time
+                ]
                 print(one_image_info_list)
                 merged_list.append(one_image_info_list)
         else:
             # 构建单个视频信息列表
-            one_video_info_list = ['video', video_author_id, video_author_name, video_create_time, video_name, video_url]
+            one_video_info_list = [
+                'video', video_author_id, video_author_name, video_create_time, video_name, video_url, create_time
+            ]
             print(one_video_info_list)
             # 将单个视频信息添加到合并列表中
             merged_list.append(one_video_info_list)
@@ -263,33 +312,43 @@ def get_video(USER_ID_DICT):
     """
     # 获取下载路径下的文件名列表，类型为List[str]
     video_name_list: List[str] = os.listdir(DOWN_LOAD_PATH)
+    # 获取合并后的视频列表
     merged_list = get_video_list_merged(USER_ID_DICT)
 
+    # 初始化更新视频列表
+    gengxin_list: List[str] = []
+    # 创建进度条，动态调整列宽
     bar: tqdm = tqdm(merged_list, dynamic_ncols=True)
+    # 遍历视频列表
     for item in bar:
-        # 组合视频文件名，类型为str
-        if item[0] == 'video':
-            total_video_name: str = str(item[1] + '_' + item[2] + '_' + item[3] + '_' + item[4]) + '.mp4'
-        else:
-            total_video_name: str = str(item[1] + '_' + item[2] + '_' + item[3] + '_' + item[4]) + '.webp'
-        if check_video_uniq(total_video_name, video_name_list):  # 检查视频文件名是否唯一
-            # 使用requests获取视频内容，类型为bytes
-            video: bytes = requests.get(url=item[5], headers=headers, stream=True).content
-            # print(requests.get(url=item[4], headers=headers, stream=True).raise_for_status(), item[4])
-            # 将视频内容写入文件
-            write_into_file(DOWN_LOAD_PATH + total_video_name, video)
-            # 设置进度条的描述为视频文件名命中
-            bar.set_description(f'{total_video_name}命中')
-            # 可选的设置进度条后缀为视频文件名命中
-            # bar.set_postfix(total_video_name=f'{total_video_name}命中')
-            # 延时1秒
-            time.sleep(1)
-        else:
-            # 设置进度条的描述为视频文件名已存在
-            bar.set_description(f'{total_video_name}已存在')
-            continue
-            # 可选的设置进度条后缀为视频文件名已存在
-            # bar.set_postfix(total_video_name=f'{total_video_name}已存在')
+        try:
+            # 根据视频或图片组合文件名，类型为str
+            if item[0] == 'video':
+                total_video_name: str = str(item[1] + '_' + item[2] + '_' + item[3] + '_' + item[4]) + '.mp4'
+            else:
+                total_video_name: str = str(item[1] + '_' + item[2] + '_' + item[3] + '_' + item[4]) + '.webp'
+            # 检查视频文件名是否唯一
+            if check_video_uniq(total_video_name, video_name_list):
+                # 使用requests获取视频内容，类型为bytes
+                video: bytes = requests.get(url=item[5], headers=headers, stream=True).content
+                # 将视频内容写入文件
+                write_into_file(DOWN_LOAD_PATH + total_video_name, video)
+                # 设置进度条的描述为视频文件名命中
+                bar.set_description(f'{total_video_name}命中')
+
+                # 将命中视频添加到更新视频列表
+                gengxin_list.append(total_video_name)
+                # 延时1秒
+                time.sleep(1)
+            else:
+                # 设置进度条的描述为视频文件名已存在
+                bar.set_description(f'{total_video_name}已存在')
+                # 继续下一次循环
+                continue
+        except Exception as e:
+            # 打印异常信息
+            print(e)
+    group_and_print_update_stats(gengxin_list)
 
 
 def main():

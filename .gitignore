@@ -8,4 +8,5 @@ douyinjson
 mergedlist*
 pdfs/
 中金公司*
-脚本数据结构示例/
+__pycache__
+novel_*

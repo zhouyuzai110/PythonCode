@@ -1,34 +1,16 @@
-# from turtle import title
 import os
 from typing import List
-
-import requests
+import time
+import random
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+import requests
 
-cookie = 'acw_tc=ac11000117480554457588212e007b928291258dd9fb00f6caccc9d1847a8c; JSESSIONID=2AEE9074CBFDCA83D7E424E516CF7D2A; SERVERID=b6e8b125b75f5dba425d2c6ba8a9a6c1|1748055548|1748055446; Hm_lvt_ea8e1f649766983f7078bdf6db3e61da=1748055551; Hm_lpvt_ea8e1f649766983f7078bdf6db3e61da=1748055551; HMACCOUNT=1A0A8E190BB1F97C; ssxmod_itna=eqGxRiDtqmqiq0IxYjKBK4xQqqWqijtDRDl4BtGR/DITe7=GFQDCrLUC0RohAuyh2qqm7iGnDDl=AqoDSxD=7DK4GTmG6uBDY7SQAhbqF7QGmhtiYAnhqcdM7Yl7mfastZS9mni40aDbqDyn7AxK4GGA4GwDGoD34DiDDPfD03Db4D+UliD7xbdcmTYaePDQ4GyDitDKqPbxG3D04bKbkb4DDXQR7G9KDGWGQuVWPPFxGt=RldYx0UaDBLt+IDYxDtEEIGNuCgXDKoPrPaDtqD9zZRDO1Ioq1uqx9Q5iRD5Y2YqbGmtWbwxmG5jxYGN5WDGmwZ2N2DhG7Yz0GwmXo8eDDcrYiO0vrtYeY2BQHSGnS85oByb/5ej5b7D1tRxVb5+GeObtR+NiTiDbV4bx60OK+/7GDD; ssxmod_itna2=eqGxRiDtqmqiq0IxYjKBK4xQqqWqijtDRDl4BtGR/DITe7=GFQDCrLUC0RohAuyh2qqm7iGeDAYg75ExYYD7pxP7DpwK=DBq4WOC1iYMnU1bDc2GjIhx22g0PS4o3BjUhE2RMjRStiuz0A5Q2hKsq8iGgDa+cr7aDSBs1PO80CHmhh5OvOoGjOPqlZgD1Rysa=iOxUwOCivI8Q9DinAIUxI+W3pev8xmaOAPDIi5ipi6+Phs2ExeOOi5o3wqKHvTa1omimGPwRrHdE75CxT5p3E2RDMFCFHWrrk8rrYw8exnhk3ZoIHFnH3RoKVDptBGVriqt0SEh00NAnIPIAtAp5fhtG0Sgm39poS=D4P1j0DSi48YcOQvpP0rYLx5q92XeK=7GRxmZWuN26Z7hR6Yh2YMpGT=6oc0r2Qz9PZlt48xqm2bhDA4b3UbV0pd3Ib1oH3KSgDIII++UggUbzEiPaYR2/0Gvp=u7Dr2RKjv9BvGPKdjIxGLnmdi16tzKLt=ZCW1+up8fMDjQIEjlGulWEQGPjFYY3UKEv=6/xcNXBnF5Q2n0nyTdIRP=T=QVitE7a7m6f7G1jRMBHLeK3bEt7MMo34EOADo=cGcDAw3q7bCzuv8RaqB3=agIOZuWiWuBwUk4gKq0CjeUpwC=jIk9i+mGkymB1rdV8Kn/qtLBNpHHGOKNq7hbhxChnmD8hjYP/5DbDChTQemGrlGmi5neSDNBqmTiDetAKteqGq3DD'
-headers = {
-    'User-Agent':
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
-    # "Referer": 'https://www.cicc.com',
-    'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
-    'Host': 'www.cicc.com',
-    'Accept':
-    'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-    'Accept-Encoding': 'gzip, deflate, br, zstd',
-    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7',
-    'Cache-Control': 'max-age=0',
-    'Connection': 'keep-alive',
-    'cookie': cookie,
-    'Sec-Fetch-Dest': 'document',
-    'Sec-Fetch-Mode': 'navigate',
-    'Sec-Fetch-Site': 'none',
-    'Sec-Fetch-User': '?1',
-    'Upgrade-Insecure-Requests': '1',
-    'sec-ch-ua-mobile': '?0',
-    'sec-ch-ua-platform': "Windows"
-}
 down_load_path = "E:/PythonCode/futures/"
-# page_baseurl = 'https://www.cicc.com/comp/xibDkContent/row?compId=xibDkContent_row-15447668695597004&columnId=833&xibcommonId=833&pageSize=12&currentPage='
 page_baseurl = 'https://www.cicc.com/business/list_214_223_'
 download_baseurl = 'https://www.cicc.com'
 
@@ -48,21 +30,53 @@ def get_link_list(url: str) -> list:
     返回值：
     id_title_map: list，包含链接和标题的字典列表
     """
-    # 发送GET请求获取网页内容
-    r = requests.get(url, headers=headers)
+    # 设置Chrome选项
+    chrome_options = Options()
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36')
+    chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    chrome_options.add_experimental_option('useAutomationExtension', False)
+    
+    # 创建WebDriver实例
+    driver = webdriver.Chrome(options=chrome_options)
+    driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
+        'source': '''
+            Object.defineProperty(navigator, 'webdriver', {
+                get: () => undefined
+            })
+        '''
+    })
+    
+    try:
+        # 访问页面
+        print(f"正在访问页面: {url}")
+        driver.get(url)
+        
+        # 等待页面加载
+        time.sleep(random.uniform(5, 10))
+        
+        # 获取页面源码
+        page_source = driver.page_source
+        
+        # 使用BeautifulSoup解析网页内容
+        soup = BeautifulSoup(page_source, "html.parser")
+        print(f"页面标题: {soup.title.string if soup.title else '无标题'}")
 
-    # 使用BeautifulSoup解析网页内容
-    soup = BeautifulSoup(r.content, "html.parser")
-    print(soup)
+        # 查找所有class为"item"的div标签
+        content = soup.find_all('div', {'class': 'item'})
 
-    # 查找所有class为“item”的div标签
-    content = soup.find_all('div', {'class': 'item'})
+        # 处理每个content元素，将其转换为字典并存入id_title_map列表中
+        id_title_map = list(map(proc_dict, content))
 
-    # 处理每个content元素，将其转换为字典并存入id_title_map列表中
-    id_title_map = list(map(proc_dict, content))
-
-    # 返回id_title_map列表
-    return id_title_map
+        # 返回id_title_map列表
+        return id_title_map
+    except Exception as e:
+        print(f"请求异常: {e}")
+        return []
+    finally:
+        driver.quit()
 
 
 def proc_dict(one: BeautifulSoup):  # 定义一个函数proc_dict，接收一个BeautifulSoup类型的参数one
@@ -91,8 +105,33 @@ def get_pdf(url, title):
     返回：
         无
     """
-    PDF = requests.get(url=url, headers=headers).content
-    write_into_file(down_load_path + title, PDF)
+    # 设置Chrome选项
+    chrome_options = Options()
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36')
+    
+    # 创建WebDriver实例
+    driver = webdriver.Chrome(options=chrome_options)
+    
+    try:
+        # 添加随机延迟避免请求过于频繁
+        time.sleep(random.uniform(2, 5))
+        
+        print(f"正在下载: {title}")
+        print(f"URL: {url}")
+        driver.get(url)
+        
+        # 等待文件下载或重定向
+        time.sleep(5)
+        
+        # 获取页面内容
+        pdf_content = driver.page_source.encode('utf-8')
+        write_into_file(down_load_path + title, pdf_content)
+    except Exception as e:
+        print(f"下载文件失败 {title}: {e}")
+    finally:
+        driver.quit()
 
 
 def check_uniq(name, name_list):
@@ -107,22 +146,22 @@ def main():
     for i in range(1, 2):
         # 构建页面链接 (类型：str)
         page_link = page_baseurl + str(i) + '.html'
-        print(page_link)
+        print(f"正在访问页面: {page_link}")
         # 获取页面中的链接列表 (类型：list[tuple])
         link_list = get_link_list(page_link)
-        print(link_list)
+        print(f"找到 {len(link_list)} 个链接")
         # 遍历链接列表中的元组
         for link in link_list:
             # 构建下载链接 (类型：str)
             url, title = link
-            # str(link[0])
-            # 构建文件名 (类型：str)
-            # title = link[1] + '.pdf'
             # 检查文件名是否唯一 (返回类型：bool)
             if check_uniq(title, name_list):
-                print(url)
+                print(f"正在下载: {title}")
+                print(f"URL: {url}")
                 # 下载文件 (参数类型：str, str)
                 get_pdf(url, title)
+            else:
+                print(f"文件已存在，跳过: {title}")
 
 
 if __name__ == '__main__':
